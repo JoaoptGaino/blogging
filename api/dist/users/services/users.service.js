@@ -13,6 +13,7 @@ exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../prisma.service");
 const bcrypt_1 = require("bcrypt");
+const utils_1 = require("../../utils");
 let UsersService = class UsersService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -32,11 +33,11 @@ let UsersService = class UsersService {
             where,
             orderBy,
         });
-        return allUsers;
+        return utils_1.transformer(allUsers);
     }
     async findOne(id) {
         const user = await this.prisma.user.findUnique({ where: { id } });
-        return user;
+        return utils_1.transformerUnique(user);
     }
     async findUserByEmail(email) {
         return await this.prisma.user.findFirst({ where: { email } });

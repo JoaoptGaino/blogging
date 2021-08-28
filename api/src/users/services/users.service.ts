@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { compare, genSalt, hash } from 'bcrypt';
+import { transformer, transformerUnique } from 'src/utils';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
@@ -32,12 +33,12 @@ export class UsersService {
       where,
       orderBy,
     });
-    return allUsers;
+    return transformer(allUsers);
   }
 
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({ where: { id } });
-    return user;
+    return transformerUnique(user);
   }
   async findUserByEmail(email: string): Promise<User | null> {
     return await this.prisma.user.findFirst({ where: { email } });
